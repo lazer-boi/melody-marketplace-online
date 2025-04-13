@@ -6,18 +6,21 @@ const API_BASE_URL = 'http://localhost:3001/api';
 
 // Helper function to determine if we're using local storage or real API
 const shouldUseLocalStorage = () => {
-  // Always use localStorage in this environment as we can't connect to localhost
-  return true;
+  // Set to false to use the actual MySQL database connection
+  return false;
 };
 
 // Generic fetch wrapper with error handling
 const fetchWithErrorHandling = async (url: string, options?: RequestInit) => {
+  console.log(`Making API request to: ${url}`, options);
   try {
     const response = await fetch(url, options);
     if (!response.ok) {
       throw new Error(`HTTP error ${response.status}`);
     }
-    return await response.json();
+    const data = await response.json();
+    console.log(`API response from ${url}:`, data);
+    return data;
   } catch (error) {
     console.error(`API request failed for ${url}:`, error);
     throw error;
