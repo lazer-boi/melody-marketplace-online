@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { fetchComposers as fetchComposersApi, createComposer, updateComposer, deleteComposer } from '@/services/apiService';
 
 interface Composer {
   id?: number;
@@ -27,11 +28,11 @@ export function ComposerForm() {
 
   const fetchComposers = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/composers');
-      const data = await response.json();
+      const data = await fetchComposersApi();
       setComposers(data);
     } catch (error) {
       console.error('Error fetching composers:', error);
+      setComposers([]);
     }
   };
 
@@ -44,17 +45,9 @@ export function ComposerForm() {
     e.preventDefault();
     try {
       if (editId) {
-        await fetch(`http://localhost:3001/api/composers/${editId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
+        await updateComposer(editId, formData);
       } else {
-        await fetch('http://localhost:3001/api/composers', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
+        await createComposer(formData);
       }
       
       setFormData({ name: '', contact: '', address: '' });
@@ -78,9 +71,7 @@ export function ComposerForm() {
     if (!id) return;
     
     try {
-      await fetch(`http://localhost:3001/api/composers/${id}`, {
-        method: 'DELETE',
-      });
+      await deleteComposer(id);
       fetchComposers();
     } catch (error) {
       console.error('Error deleting composer:', error);

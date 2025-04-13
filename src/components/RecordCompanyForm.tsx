@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { fetchRecordCompanies as fetchRecordCompaniesApi, createRecordCompany, updateRecordCompany, deleteRecordCompany } from '@/services/apiService';
 
 interface RecordCompany {
   id?: number;
@@ -27,11 +28,11 @@ export function RecordCompanyForm() {
 
   const fetchRecordCompanies = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/record-companies');
-      const data = await response.json();
+      const data = await fetchRecordCompaniesApi();
       setRecordCompanies(data);
     } catch (error) {
       console.error('Error fetching record companies:', error);
+      setRecordCompanies([]);
     }
   };
 
@@ -44,17 +45,9 @@ export function RecordCompanyForm() {
     e.preventDefault();
     try {
       if (editId) {
-        await fetch(`http://localhost:3001/api/record-companies/${editId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
+        await updateRecordCompany(editId, formData);
       } else {
-        await fetch('http://localhost:3001/api/record-companies', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
+        await createRecordCompany(formData);
       }
       
       setFormData({ name: '', contact: '', address: '' });
@@ -78,9 +71,7 @@ export function RecordCompanyForm() {
     if (!id) return;
     
     try {
-      await fetch(`http://localhost:3001/api/record-companies/${id}`, {
-        method: 'DELETE',
-      });
+      await deleteRecordCompany(id);
       fetchRecordCompanies();
     } catch (error) {
       console.error('Error deleting record company:', error);

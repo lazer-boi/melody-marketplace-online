@@ -4,6 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { fetchSongs as fetchSongsApi, searchSongs as searchSongsApi, fetchSingers as fetchSingersApi, 
+  fetchComposers as fetchComposersApi, fetchRecordCompanies as fetchRecordCompaniesApi,
+  createSong, updateSong as updateSongApi, deleteSong as deleteSongApi } from '@/services/apiService';
 
 interface Singer {
   id: number;
@@ -74,51 +77,51 @@ export function SongForm() {
 
   const fetchSongs = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/songs');
-      const data = await response.json();
+      const data = await fetchSongsApi();
       setSongs(data);
     } catch (error) {
       console.error('Error fetching songs:', error);
+      setSongs([]);
     }
   };
 
   const searchSongs = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/search/songs?term=${searchTerm}`);
-      const data = await response.json();
+      const data = await searchSongsApi(searchTerm);
       setSongs(data);
     } catch (error) {
       console.error('Error searching songs:', error);
+      setSongs([]);
     }
   };
 
   const fetchSingers = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/singers');
-      const data = await response.json();
+      const data = await fetchSingersApi();
       setSingers(data);
     } catch (error) {
       console.error('Error fetching singers:', error);
+      setSingers([]);
     }
   };
 
   const fetchComposers = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/composers');
-      const data = await response.json();
+      const data = await fetchComposersApi();
       setComposers(data);
     } catch (error) {
       console.error('Error fetching composers:', error);
+      setComposers([]);
     }
   };
 
   const fetchRecordCompanies = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/record-companies');
-      const data = await response.json();
+      const data = await fetchRecordCompaniesApi();
       setRecordCompanies(data);
     } catch (error) {
       console.error('Error fetching record companies:', error);
+      setRecordCompanies([]);
     }
   };
 
@@ -141,17 +144,9 @@ export function SongForm() {
       };
 
       if (editId) {
-        await fetch(`http://localhost:3001/api/songs/${editId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(songData),
-        });
+        await updateSongApi(editId, songData);
       } else {
-        await fetch('http://localhost:3001/api/songs', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(songData),
-        });
+        await createSong(songData);
       }
       
       setFormData({
@@ -193,9 +188,7 @@ export function SongForm() {
     if (!id) return;
     
     try {
-      await fetch(`http://localhost:3001/api/songs/${id}`, {
-        method: 'DELETE',
-      });
+      await deleteSongApi(id);
       fetchSongs();
     } catch (error) {
       console.error('Error deleting song:', error);

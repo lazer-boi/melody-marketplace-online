@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { fetchSingers as fetchSingersApi, createSinger, updateSinger, deleteSinger } from '@/services/apiService';
 
 interface Singer {
   id?: number;
@@ -27,11 +28,11 @@ export function SingerForm() {
 
   const fetchSingers = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/singers');
-      const data = await response.json();
+      const data = await fetchSingersApi();
       setSingers(data);
     } catch (error) {
       console.error('Error fetching singers:', error);
+      setSingers([]);
     }
   };
 
@@ -44,17 +45,9 @@ export function SingerForm() {
     e.preventDefault();
     try {
       if (editId) {
-        await fetch(`http://localhost:3001/api/singers/${editId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
+        await updateSinger(editId, formData);
       } else {
-        await fetch('http://localhost:3001/api/singers', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
+        await createSinger(formData);
       }
       
       setFormData({ name: '', contact: '', address: '' });
@@ -78,9 +71,7 @@ export function SingerForm() {
     if (!id) return;
     
     try {
-      await fetch(`http://localhost:3001/api/singers/${id}`, {
-        method: 'DELETE',
-      });
+      await deleteSinger(id);
       fetchSingers();
     } catch (error) {
       console.error('Error deleting singer:', error);

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { fetchCustomers as fetchCustomersApi, createCustomer, updateCustomer, deleteCustomer } from '@/services/apiService';
 
 interface Customer {
   id?: number;
@@ -27,11 +28,11 @@ export function CustomerForm() {
 
   const fetchCustomers = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/customers');
-      const data = await response.json();
+      const data = await fetchCustomersApi();
       setCustomers(data);
     } catch (error) {
       console.error('Error fetching customers:', error);
+      setCustomers([]);
     }
   };
 
@@ -44,17 +45,9 @@ export function CustomerForm() {
     e.preventDefault();
     try {
       if (editId) {
-        await fetch(`http://localhost:3001/api/customers/${editId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
+        await updateCustomer(editId, formData);
       } else {
-        await fetch('http://localhost:3001/api/customers', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
+        await createCustomer(formData);
       }
       
       setFormData({ name: '', contact: '', address: '' });
@@ -78,9 +71,7 @@ export function CustomerForm() {
     if (!id) return;
     
     try {
-      await fetch(`http://localhost:3001/api/customers/${id}`, {
-        method: 'DELETE',
-      });
+      await deleteCustomer(id);
       fetchCustomers();
     } catch (error) {
       console.error('Error deleting customer:', error);
