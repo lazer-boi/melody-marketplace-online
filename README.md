@@ -1,73 +1,71 @@
-# Welcome to your Lovable project
 
-## Project info
+# Online Music Shop Database System
 
-**URL**: https://lovable.dev/projects/53898730-5250-4f31-9d34-70bd9a72ddba
+A minimalistic web application for managing an online music shop database with MySQL backend.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- Manage Singers, Composers, Record Companies, Customers, and Songs
+- Simple CRUD operations (Create, Read, Update, Delete)
+- Search functionality for songs by title, movie, singer, composer, and record company
+- Direct MySQL database connectivity
 
-**Use Lovable**
+## Database Structure
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/53898730-5250-4f31-9d34-70bd9a72ddba) and start prompting.
+The system manages the following entities:
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Singers**: Name, Contact no, Address
+- **Composers**: Name, Address, Contact no
+- **Record Companies**: Name, Contact no, Address
+- **Customers**: Name, Contact no, Address
+- **Songs**: Title, Movie name, Price, Duration, Category, available_as, Size
 
-**Use your preferred IDE**
+## Setup Instructions
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
+- Node.js
+- MySQL server
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Database Setup
+1. Install MySQL if you haven't already
+2. Create a database named `music_shop`
+3. Update the database connection details in `src/server/index.js`
 
-Follow these steps:
+```javascript
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'YOUR_USERNAME',
+  password: 'YOUR_PASSWORD',
+  database: 'music_shop'
+});
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Running the Application
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+1. Start the backend server:
+```
+node src/server/index.js
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+2. In a separate terminal, start the frontend:
+```
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+3. The application will automatically create the necessary tables when the server starts
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Usage
 
-**Use GitHub Codespaces**
+The application has tabs for managing:
+- Songs
+- Singers
+- Composers
+- Record Companies
+- Customers
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Each tab provides a form to add/update entries and a table to view, edit, and delete records.
 
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/53898730-5250-4f31-9d34-70bd9a72ddba) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes it is!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Notes
+- Price of songs is in Rupees (₹)
+- Size of songs is in MB
+- Only movie songs are available in this system

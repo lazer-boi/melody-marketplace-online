@@ -1,0 +1,97 @@
+
+# MySQL Database Setup for Online Music Shop
+
+## Prerequisites
+- MySQL Server installed
+- MySQL command-line client or GUI tool like MySQL Workbench
+
+## Setup Steps
+
+1. **Create the Database**
+   ```sql
+   CREATE DATABASE music_shop;
+   USE music_shop;
+   ```
+
+2. **Create Tables**
+   The application will automatically create the following tables when first launched:
+
+   **Singers Table**
+   ```sql
+   CREATE TABLE singers (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     name VARCHAR(100) NOT NULL,
+     contact VARCHAR(20),
+     address TEXT
+   );
+   ```
+
+   **Composers Table**
+   ```sql
+   CREATE TABLE composers (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     name VARCHAR(100) NOT NULL,
+     contact VARCHAR(20),
+     address TEXT
+   );
+   ```
+
+   **Record Companies Table**
+   ```sql
+   CREATE TABLE record_companies (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     name VARCHAR(100) NOT NULL,
+     contact VARCHAR(20),
+     address TEXT
+   );
+   ```
+
+   **Customers Table**
+   ```sql
+   CREATE TABLE customers (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     name VARCHAR(100) NOT NULL,
+     contact VARCHAR(20),
+     address TEXT
+   );
+   ```
+
+   **Songs Table**
+   ```sql
+   CREATE TABLE songs (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     title VARCHAR(100) NOT NULL,
+     movie_name VARCHAR(100) NOT NULL,
+     price DECIMAL(10,2) NOT NULL,
+     duration VARCHAR(10),
+     category VARCHAR(50),
+     available_as VARCHAR(50),
+     size DECIMAL(10,2),
+     singer_id INT,
+     composer_id INT,
+     record_company_id INT,
+     FOREIGN KEY (singer_id) REFERENCES singers(id),
+     FOREIGN KEY (composer_id) REFERENCES composers(id),
+     FOREIGN KEY (record_company_id) REFERENCES record_companies(id)
+   );
+   ```
+
+3. **Configure Connection**
+   Update the database connection in `src/server/index.js`:
+   ```javascript
+   const db = mysql.createConnection({
+     host: 'localhost',
+     user: 'root', // replace with your MySQL username
+     password: '', // replace with your MySQL password
+     database: 'music_shop'
+   });
+   ```
+
+4. **Server Startup**
+   Run the server:
+   ```
+   node src/server/index.js
+   ```
+
+5. **Verification**
+   Once connected, you should see "Connected to MySQL database" in the console.
